@@ -92,20 +92,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-01 | Phase 1 | Pending |
 | AUTH-02 | Phase 1 | Pending |
 | AUTH-03 | Phase 1 | Pending |
-| DASH-01 | Phase 2 | Pending |
-| DASH-02 | Phase 2 | Pending |
-| DASH-03 | Phase 2 | Pending |
-| EXEC-01 | Phase 2 | Pending |
+| DASH-01 | Phase 1 | Pending |
+| DASH-02 | Phase 1 | Pending |
+| DASH-03 | Phase 1 | Pending |
+| EXEC-01 | Phase 1 | Pending |
+| LOGS-01 | Phase 2 | Pending |
+| INTR-01 | Phase 3 | Pending |
+| INTR-02 | Phase 3 | Pending |
+| INTR-03 | Phase 3 | Pending |
 | EXEC-02 | Phase 4 | Pending |
 | EXEC-03 | Phase 4 | Pending |
 | EXEC-04 | Phase 4 | Pending |
-| LOGS-01 | Phase 3 | Pending |
-| INTR-01 | Phase 5 | Pending |
-| INTR-02 | Phase 5 | Pending |
-| INTR-03 | Phase 5 | Pending |
-| INTG-01 | Phase 6 | Pending |
-| INTG-02 | Phase 6 | Pending |
-| INTG-03 | Phase 6 | Pending |
+| INTG-01 | Phase 4 | Pending |
+| INTG-02 | Phase 4 | Pending |
+| INTG-03 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 17 total

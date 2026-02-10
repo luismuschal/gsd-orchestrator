@@ -59,7 +59,7 @@ export function getDb(): Database.Database {
 export function addRepo(owner: string, name: string): Repo {
   const db = getDb();
   const id = `${owner}/${name}`;
-  const addedAt = Math.floor(Date.now() / 1000);
+  const addedAt = Date.now(); // Store milliseconds, not seconds
   
   const stmt = db.prepare(`
     INSERT INTO repos (id, owner, name, added_at)
@@ -186,4 +186,57 @@ export function updateWorkflowRun(id: number, updates: Partial<WorkflowRun>): vo
   `);
   
   stmt.run(...values);
+}
+
+/**
+ * Save authentication token to database
+ */
+export function saveAuthToken(userId: string, accessToken: string, expiresAt: number): void {
+  const db = getDb();
+  
+  const stmt = db.prepare(`
+    INSERT OR REPLACE INTO auth_tokens (user_id, access_token, expires_at)
+    VALUES (?, ?, ?)
+  `);
+  
+  stmt.run(userId, accessToken, expiresAt);
+}
+
+/**
+ * Get authentication token from database
+ */
+export function getAuthToken(userId: string = 'default'): { accessToken: string; expiresAt: number } | null {
+  const db = getDb();
+  
+  const stmt = db.prepare(`
+    SELECT access_token as accessToken, expires_at as expiresAt
+    FROM auth_tokens
+    WHERE user_id = ?
+  `);
+  
+  const result = stmt.get(userId) as { accessToken: string; expiresAt: number } | undefined;
+  
+  if (!result) return null;
+  
+  // Check if expired
+  const now = Math.floor(Date.now() / 1000);
+  if (now >= result.expiresAt) {
+    deleteAuthToken(userId);
+    return null;
+  }
+  
+  return result;
+}
+
+/**
+ * Delete authentication token from database
+ */
+export function deleteAuthToken(userId: string = 'default'): void {
+  const db = getDb();
+  
+  const stmt = db.prepare(`
+    DELETE FROM auth_tokens WHERE user_id = ?
+  `);
+  
+  stmt.run(userId);
 }

@@ -1,11 +1,6 @@
 import { createAppAuth } from '@octokit/auth-app';
 import { readFileSync } from 'fs';
-
-/**
- * In-memory token storage for single-user MVP
- * Maps userId -> { accessToken, expiresAt }
- */
-const tokenStore = new Map<string, { accessToken: string; expiresAt: number }>();
+import { saveAuthToken, getAuthToken, deleteAuthToken } from '../db/index.js';
 
 /**
  * Get GitHub OAuth authorization URL
@@ -75,8 +70,8 @@ export async function handleCallback(code: string): Promise<{ accessToken: strin
   // Access tokens expire in 8 hours
   const expiresAt = Math.floor(Date.now() / 1000) + (8 * 60 * 60);
 
-  // Store token for single user (userId = 'default')
-  tokenStore.set('default', { accessToken, expiresAt });
+  // Store token in database for single user (userId = 'default')
+  saveAuthToken('default', accessToken, expiresAt);
 
   return { accessToken, expiresAt };
 }
@@ -106,24 +101,15 @@ export async function getInstallationToken(appId: string, privateKeyPath: string
  * Get stored user token
  */
 export function getStoredToken(userId: string = 'default'): string | null {
-  const stored = tokenStore.get(userId);
-  if (!stored) return null;
-
-  // Check if expired
-  const now = Math.floor(Date.now() / 1000);
-  if (now >= stored.expiresAt) {
-    tokenStore.delete(userId);
-    return null;
-  }
-
-  return stored.accessToken;
+  const stored = getAuthToken(userId);
+  return stored ? stored.accessToken : null;
 }
 
 /**
  * Clear stored token (logout)
  */
 export function clearStoredToken(userId: string = 'default'): void {
-  tokenStore.delete(userId);
+  deleteAuthToken(userId);
 }
 
 /**
@@ -137,6 +123,6 @@ export function isAuthenticated(userId: string = 'default'): boolean {
  * Get token expiry time
  */
 export function getTokenExpiry(userId: string = 'default'): number | null {
-  const stored = tokenStore.get(userId);
+  const stored = getAuthToken(userId);
   return stored ? stored.expiresAt : null;
 }

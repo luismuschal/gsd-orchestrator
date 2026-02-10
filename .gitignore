@@ -4,3 +4,4 @@ dist/
 data/
 *.db
 *.log
+github-app-private-key.pem

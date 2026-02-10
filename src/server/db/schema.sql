@@ -1,10 +1,17 @@
+-- Authentication tokens
+CREATE TABLE IF NOT EXISTS auth_tokens (
+  user_id TEXT PRIMARY KEY, -- 'default' for single-user MVP
+  access_token TEXT NOT NULL,
+  expires_at INTEGER NOT NULL -- Unix timestamp
+);
+
 -- Tracked repositories
 CREATE TABLE IF NOT EXISTS repos (
   id TEXT PRIMARY KEY, -- owner/name format
   owner TEXT NOT NULL,
   name TEXT NOT NULL,
-  added_at INTEGER NOT NULL, -- Unix timestamp
-  last_polled_at INTEGER, -- Unix timestamp
+  added_at INTEGER NOT NULL, -- Unix timestamp (milliseconds)
+  last_polled_at INTEGER, -- Unix timestamp (milliseconds)
   UNIQUE(owner, name)
 );
 
@@ -15,8 +22,8 @@ CREATE TABLE IF NOT EXISTS workflow_runs (
   workflow_name TEXT NOT NULL,
   status TEXT NOT NULL, -- queued, in_progress, completed
   conclusion TEXT, -- success, failure, cancelled, skipped
-  started_at INTEGER, -- Unix timestamp
-  completed_at INTEGER, -- Unix timestamp
+  started_at INTEGER, -- Unix timestamp (milliseconds)
+  completed_at INTEGER, -- Unix timestamp (milliseconds)
   html_url TEXT NOT NULL,
   FOREIGN KEY (repo_id) REFERENCES repos(id) ON DELETE CASCADE
 );

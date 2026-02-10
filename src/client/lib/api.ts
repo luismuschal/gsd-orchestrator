@@ -60,5 +60,18 @@ export const api = {
       method: 'POST'
     });
     if (!res.ok) throw new Error('Failed to dispatch workflow');
+  },
+  
+  // Auth endpoints
+  async getAuthStatus(): Promise<{ authenticated: boolean; expiresAt?: number }> {
+    const res = await fetch(`${API_BASE}/auth/status`);
+    if (!res.ok) throw new Error('Failed to get auth status');
+    return res.json();
+  },
+  
+  async getLoginUrl(): Promise<{ url: string }> {
+    const res = await fetch(`${API_BASE}/auth/login`);
+    if (!res.ok) throw new Error('Failed to get login URL');
+    return res.json();
   }
 };

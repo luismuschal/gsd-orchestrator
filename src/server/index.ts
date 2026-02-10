@@ -2,7 +2,11 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { initDb } from './db/index.js';
 import { authRoutes } from './routes/auth.js';
-import { stopPoller } from './github/poller.js';
+import { repoRoutes } from './routes/repos.js';
+import { workflowRoutes } from './routes/workflows.js';
+import { startPoller, stopPoller } from './github/poller.js';
+import { GitHubClient } from './github/client.js';
+import { getStoredToken } from './auth/github.js';
 
 const server = Fastify({
   logger: {
@@ -22,11 +26,15 @@ server.register(cors, {
   origin: true
 });
 
-// Register auth routes
+// Register routes
 server.register(authRoutes);
 server.log.info('Auth routes registered');
 
-// Poller will be started in Task 2b after routes registered
+server.register(repoRoutes);
+server.log.info('Repo routes registered');
+
+server.register(workflowRoutes);
+server.log.info('Workflow routes registered');
 
 // Health check endpoint
 server.get('/api/health', async (request, reply) => {
@@ -54,6 +62,16 @@ const start = async () => {
     const port = parseInt(process.env.PORT || '3000', 10);
     await server.listen({ port, host: '0.0.0.0' });
     server.log.info(`Server listening on port ${port}`);
+
+    // Start polling service if authenticated
+    const token = getStoredToken();
+    if (token) {
+      const client = new GitHubClient(token);
+      await startPoller(client);
+      server.log.info('Polling service started');
+    } else {
+      server.log.info('Polling service not started (not authenticated yet)');
+    }
   } catch (err) {
     server.log.error(err);
     process.exit(1);

@@ -1,7 +1,7 @@
 # Project State: GitHub GSD Orchestrator
 
 **Last Updated:** 2026-02-10
-**Current Focus:** Phase 1 (Foundation & Dashboard) in progress - Plan 01-03 complete
+**Current Focus:** Phase 1 complete ✅ - Ready for Phase 2 planning
 
 ---
 
@@ -19,17 +19,17 @@
 
 **Milestone:** v1 - Initial Release
 
-**Phase:** 01-foundation-dashboard (in progress)
+**Phase:** 01-foundation-dashboard ✅ Complete
 - [x] Plan 01-01: Project foundation with Fastify and SQLite ✓
 - [x] Plan 01-02: GitHub App OAuth and API integration ✓
 - [x] Plan 01-03: React dashboard UI ✓
-- [ ] Plan 01-04: Human verification checkpoint
+- [x] Plan 01-04: Human verification checkpoint ✓
 
-**Current Plan:** 01-04 (next)
+**Current Plan:** Ready for Phase 2 planning
 
-**Status:** Phase 1 foundation complete - backend, frontend, and integration ready for verification
+**Status:** Phase 1 verified and complete - all 7 requirements met, ready for Phase 2
 
-**Progress:** `[███████░░░░░░░░░░░░░] 35%` (6/17 requirements complete)
+**Progress:** `[█████████░░░░░░░░░░░] 41%` (7/17 requirements complete)
 
 ---
 
@@ -37,23 +37,22 @@
 
 **Requirements:**
 - Total v1: 17
-- Completed: 0
+- Completed: 7 (Phase 1)
 - In Progress: 0
 - Blocked: 0
 
 **Phases:**
 - Total: 4
-- Completed: 0
-- In Progress: 1 (Phase 1)
+- Completed: 1 (Phase 1)
+- In Progress: 0
 - Not Started: 3
 
-**Plans:**
-- Total (Phase 1): 4
-- Completed: 3
-- In Progress: 0
-- Remaining: 1
+**Plans (Phase 1):**
+- Total: 4
+- Completed: 4
+- Success Rate: 100%
 
-**Velocity:** 3 plans in 11 min (avg: 3.7 min/plan)
+**Velocity:** 4 plans completed, Phase 1 verified PASSED
 
 ---
 
@@ -77,10 +76,15 @@
 | 2026-02-10 | Tailwind CSS v4 with PostCSS plugin | Modern utility-first CSS framework | Clean, responsive UI with minimal custom CSS |
 | 2026-02-10 | Auto-refresh every 10s per repo | Client-side polling for workflow status | Near-real-time updates without WebSocket complexity (Phase 2) |
 | 2026-02-10 | Hardcoded main.yml for dispatch | MVP assumes all repos have main.yml workflow | Acceptable for Phase 1 testing, Phase 2 adds discovery |
+| 2026-02-10 | Token persistence to database (not memory) | Restart bug fixed - tokens must survive server restart | No re-auth needed after restart |
+| 2026-02-10 | Milliseconds for timestamps (not seconds) | Date display bug fixed - JS needs milliseconds | Dates display correctly now |
+| 2026-02-10 | Fetch all runs, not just in_progress | Completed workflows must show in dashboard | All workflow states visible |
+| 2026-02-10 | Start poller after OAuth callback | Auth timing issue - poller starts too early | Workflows appear after authentication |
+| 2026-02-10 | Add login UI with auth status indicator | User needs to know when auth expires | Clear visual feedback for auth state |
 
 ### Active TODOs
 
-*None yet—roadmap just created*
+*None - Phase 1 complete*
 
 ### Known Blockers
 
@@ -88,45 +92,46 @@
 
 ### Technical Debt
 
-*None yet—project not started*
+**MVP Limitations (Planned):**
+1. Workflow dispatch hardcoded to 'main.yml' - Phase 2 adds discovery
+2. Polling-based updates (10s latency) - Phase 2 adds WebSocket
+3. Single-user only - Multi-user out of scope for v1
+4. No log viewing - Phase 2 feature
 
 ---
 
 ## Session Continuity
 
 **What Just Happened:**
-- Completed Plan 01-03: React dashboard UI
-- 2 tasks executed and committed atomically (23ec397, 07b916a)
-- React frontend with Vite dev server and Tailwind CSS
-- Dashboard showing repos in responsive grid with status badges
-- Auto-refresh workflow status every 10 seconds per repo
-- Add/remove repository UI and workflow dispatch controls
-- Complete Phase 1 foundation (backend + frontend + integration)
-- Self-check passed: all files created, commits verified
+- ✅ Completed Phase 1: Foundation & Dashboard
+- All 4 plans executed successfully (01-01, 01-02, 01-03, 01-04)
+- Human verification checkpoint approved
+- 6 post-plan fixes implemented (env loading, branch fix, polling fixes, token persistence, login UI)
+- Verification PASSED: 12/12 must-haves, 7/7 requirements, 5/5 success criteria
+- Phase 1 marked complete in ROADMAP.md
 
 **What's Next:**
-- Execute Plan 01-04: Human verification checkpoint
-- Test full integration (backend + frontend)
-- Verify OAuth flow, repo management, and workflow dispatch
-- Visual testing of UI and status updates
+- Plan Phase 2: Logs & Real-Time Updates
+- Phase 2 requires research (WebSocket patterns, log streaming)
+- Consider: `/gsd-research-phase 2` before planning
+- Or: `/gsd-plan-phase 2` to start directly
 
 **Context for Next Session:**
-- Phase 1 foundation complete: Backend (Fastify, SQLite, GitHub OAuth, API, polling) + Frontend (React, Vite, Tailwind)
-- All 7 Phase 1 requirements satisfied (AUTH-01/02/03, DASH-01/02/03, EXEC-01)
-- USER SETUP REQUIRED: GitHub App must be configured before auth works (see 01-02-USER-SETUP.md)
-- MVP limitation: Workflow dispatch hardcoded to main.yml (Phase 2 adds discovery)
-- Next plan is human verification checkpoint (visual testing)
+- **Phase 1 Complete ✅** - Working orchestrator with auth, dashboard, workflow triggers
+- Backend: Fastify + SQLite + GitHub OAuth + Smart polling
+- Frontend: React + Vite + Tailwind + Real-time status updates
+- All code committed and pushed to GitHub (luismuschal/gsd-orchestrator)
+- Authentication persists across restarts (database storage)
+- Ready to add WebSocket + log viewing in Phase 2
 
 **Key Files:**
-- `.planning/phases/01-foundation-dashboard/01-03-SUMMARY.md` — Plan 01-03 completion summary
-- `vite.config.ts` — Vite dev server with API proxy
-- `src/client/pages/Dashboard.tsx` — Main dashboard page
-- `src/client/components/RepoCard.tsx` — Repo card with workflow status
-- `src/client/components/StatusBadge.tsx` — Color-coded status badges
-- `src/client/lib/api.ts` — Backend API client
+- `.planning/phases/01-foundation-dashboard/01-VERIFICATION.md` — Phase 1 verification report
+- `.planning/phases/01-foundation-dashboard/01-04-SUMMARY.md` — Checkpoint completion
+- `.planning/ROADMAP.md` — Phase 1 marked complete
+- All source code functional and tested
 
 ---
 
-*State initialized: 2026-02-10*
-*Last session: Completed plan 01-03-PLAN.md (2026-02-10)*
-*Ready for: Plan 01-04 (Human verification checkpoint)*
+*State updated: 2026-02-10*
+*Last milestone: Phase 1 complete*
+*Ready for: Phase 2 planning (/gsd-plan-phase 2 or /gsd-research-phase 2)*

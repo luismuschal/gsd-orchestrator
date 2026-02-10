@@ -1,0 +1,36 @@
+name: Test Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'Test message'
+        required: false
+        default: 'Hello from GSD Orchestrator!'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Print message
+        run: |
+          echo "🚀 Workflow triggered from GSD Orchestrator"
+          echo "Message: ${{ github.event.inputs.message }}"
+          echo "Triggered by: ${{ github.actor }}"
+          echo "Repository: ${{ github.repository }}"
+      
+      - name: Sleep for demo
+        run: |
+          echo "Running for 30 seconds to demonstrate status tracking..."
+          sleep 30
+          echo "✅ Workflow complete!"
+      
+      - name: Summary
+        run: |
+          echo "## Workflow Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Triggered at: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "- Status: Success ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- Dashboard should show this as completed!" >> $GITHUB_STEP_SUMMARY

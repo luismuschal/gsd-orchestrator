@@ -1,5 +1,7 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
-import { getAuthUrl, handleCallback, isAuthenticated, getTokenExpiry, clearStoredToken } from '../auth/github.js';
+import { getAuthUrl, handleCallback, isAuthenticated, getTokenExpiry, clearStoredToken, getStoredToken } from '../auth/github.js';
+import { GitHubClient } from '../github/client.js';
+import { startPoller } from '../github/poller.js';
 
 /**
  * Auth routes plugin
@@ -36,8 +38,16 @@ export async function authRoutes(server: FastifyInstance, options: FastifyPlugin
       const { accessToken, expiresAt } = await handleCallback(code);
       server.log.info('User authenticated successfully');
 
+      // Start polling service with the new token
+      const token = getStoredToken();
+      if (token) {
+        const client = new GitHubClient(token);
+        await startPoller(client);
+        server.log.info('Polling service started after authentication');
+      }
+
       // Redirect to dashboard
-      reply.redirect('http://localhost:3000/dashboard');
+      reply.redirect('http://localhost:5173/dashboard');
     } catch (error) {
       server.log.error({ error }, 'OAuth callback failed');
       reply.code(401);

@@ -27,7 +27,7 @@ export class GitHubClient {
   /**
    * Trigger workflow dispatch
    */
-  async dispatchWorkflow(owner: string, repo: string, workflowId: string, ref = 'main') {
+  async dispatchWorkflow(owner: string, repo: string, workflowId: string, ref = 'master') {
     await this.octokit.actions.createWorkflowDispatch({
       owner,
       repo,

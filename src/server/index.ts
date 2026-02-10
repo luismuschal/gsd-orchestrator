@@ -2,6 +2,7 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { initDb } from './db/index.js';
 import { authRoutes } from './routes/auth.js';
+import { stopPoller } from './github/poller.js';
 
 const server = Fastify({
   logger: {
@@ -25,6 +26,8 @@ server.register(cors, {
 server.register(authRoutes);
 server.log.info('Auth routes registered');
 
+// Poller will be started in Task 2b after routes registered
+
 // Health check endpoint
 server.get('/api/health', async (request, reply) => {
   return { status: 'ok' };
@@ -35,6 +38,7 @@ const signals = ['SIGTERM', 'SIGINT'];
 for (const signal of signals) {
   process.on(signal, async () => {
     server.log.info(`${signal} received, closing server gracefully`);
+    stopPoller(); // Stop polling before shutdown
     await server.close();
     process.exit(0);
   });

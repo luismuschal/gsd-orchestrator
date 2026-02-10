@@ -102,7 +102,7 @@ export function removeRepo(id: string): void {
 /**
  * Add a workflow run
  */
-export function addWorkflowRun(run: Omit<WorkflowRun, 'id'>): WorkflowRun {
+export function addWorkflowRun(run: WorkflowRun): WorkflowRun {
   const db = getDb();
   
   const stmt = db.prepare(`
@@ -110,11 +110,8 @@ export function addWorkflowRun(run: Omit<WorkflowRun, 'id'>): WorkflowRun {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `);
   
-  // Note: id is provided in the input (GitHub run ID), not auto-generated
-  const id = (run as any).id || 0; // This should be passed in the run object
-  
   stmt.run(
-    id,
+    run.id,
     run.repoId,
     run.workflowName,
     run.status,
@@ -124,7 +121,7 @@ export function addWorkflowRun(run: Omit<WorkflowRun, 'id'>): WorkflowRun {
     run.htmlUrl
   );
   
-  return { id, ...run };
+  return run;
 }
 
 /**

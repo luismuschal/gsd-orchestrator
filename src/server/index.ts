@@ -1,5 +1,8 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import fastifyStatic from '@fastify/static';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { initDb } from './db/index.js';
 import { authRoutes } from './routes/auth.js';
 import { repoRoutes } from './routes/repos.js';
@@ -7,6 +10,9 @@ import { workflowRoutes } from './routes/workflows.js';
 import { startPoller, stopPoller } from './github/poller.js';
 import { GitHubClient } from './github/client.js';
 import { getStoredToken } from './auth/github.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const server = Fastify({
   logger: {
@@ -39,6 +45,21 @@ server.log.info('Workflow routes registered');
 // Health check endpoint
 server.get('/api/health', async (request, reply) => {
   return { status: 'ok' };
+});
+
+// Serve static files in production
+server.register(fastifyStatic, {
+  root: path.join(__dirname, '../../dist/client'),
+  prefix: '/'
+});
+
+// Fallback for SPA routing (return index.html for non-API routes)
+server.setNotFoundHandler((request, reply) => {
+  if (request.url.startsWith('/api')) {
+    reply.code(404).send({ error: 'Not found' });
+  } else {
+    reply.sendFile('index.html');
+  }
 });
 
 // Graceful shutdown handling

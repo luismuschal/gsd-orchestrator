@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import { initDb } from './db/index.js';
+import { authRoutes } from './routes/auth.js';
 
 const server = Fastify({
   logger: {
@@ -19,6 +20,10 @@ const server = Fastify({
 server.register(cors, {
   origin: true
 });
+
+// Register auth routes
+server.register(authRoutes);
+server.log.info('Auth routes registered');
 
 // Health check endpoint
 server.get('/api/health', async (request, reply) => {

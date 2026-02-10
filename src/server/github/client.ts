@@ -12,14 +12,14 @@ export class GitHubClient {
 
   /**
    * List workflow runs for a repository
-   * Only fetches in_progress runs for smart polling
+   * Fetches recent runs (all statuses)
    */
   async listWorkflowRuns(owner: string, repo: string, perPage = 30) {
     const { data } = await this.octokit.actions.listWorkflowRunsForRepo({
       owner,
       repo,
       per_page: perPage,
-      status: 'in_progress', // Only active runs for smart polling
+      // Don't filter by status - get all recent runs
     });
     return data.workflow_runs;
   }

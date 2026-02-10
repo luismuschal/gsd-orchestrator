@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import { initDb } from './db/index.js';
 
 const server = Fastify({
   logger: {
@@ -37,6 +38,10 @@ for (const signal of signals) {
 // Start server
 const start = async () => {
   try {
+    // Initialize database
+    initDb();
+    server.log.info('Database initialized');
+    
     const port = parseInt(process.env.PORT || '3000', 10);
     await server.listen({ port, host: '0.0.0.0' });
     server.log.info(`Server listening on port ${port}`);
